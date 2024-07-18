@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "echo 'Building the project...' && mkdir -p dist && cp -r * dist",
+    "build": "echo 'Building the project...' && mkdir -p dist && cp -r index.html assets dist/ && cp style.css script.js dist/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -3,7 +3,7 @@ name: CI/CD for Simple HTML with Docker
 on:
   push:
     branches:
-      - main  
+      - automation
 
 jobs:
   build-and-deploy:
@@ -26,7 +26,12 @@ jobs:
           # Add deployment commands if needed
           echo "No deployment actions specified"
 
-      - name: Deploy to GitHub Pages (optional)
+      - name: Check if on main branch
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: echo "Deployment triggered from main branch"
+
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,9 +1,9 @@
-name: Deploy to GitHub Pages
+name: CI/CD for Simple HTML
 
 on:
   push:
     branches:
-      - main
+      - main  # Trigger on push to main branch
 
 jobs:
   build-and-deploy:
@@ -13,9 +13,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-     
+      - name: Build and Test HTML
+        run: |
+          # Optional: Add any testing scripts or commands here
+          echo "No tests for static HTML"
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.MY_SECRET }}
-          publish_dir: ./dist  # Adjust if your build output directory is different
+          publish_dir: . 
+          

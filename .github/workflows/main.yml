@@ -1,4 +1,4 @@
-name: CI/CD for Simple HTML
+name: CI/CD for Simple HTML with Docker
 
 on:
   push:
@@ -13,14 +13,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Build and Test HTML
-        run: |
-          # Optional: Add any testing scripts or commands here
-          echo "No tests for static HTML"
+      - name: Build Docker image
+        run: docker build -t portfolio-app .
 
-      - name: Deploy to GitHub Pages
+      - name: Test Docker image (optional)
+        run: |
+          # Add testing commands if needed
+          echo "No tests for Docker image"
+
+      - name: Deploy Docker image (optional)
+        run: |
+          # Add deployment commands if needed
+          echo "No deployment actions specified"
+
+      - name: Deploy to GitHub Pages (optional)
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .  
-         
+          publish_dir: .

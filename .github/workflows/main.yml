@@ -3,7 +3,7 @@ name: CI/CD for Simple HTML with Docker
 on:
   push:
     branches:
-      - main  # Trigger on push to main branch
+      - main  
 
 jobs:
   build-and-deploy:

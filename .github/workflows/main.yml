@@ -2,12 +2,15 @@ name: CI/CD for Simple HTML with Docker
 
 on:
   push:
+    branches-ignore:
+      - main
+  pull_request:
     branches:
       - main
-      - portfolio
 
 jobs:
   build-and-deploy:
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
@@ -17,21 +20,28 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASS }}
+
       - name: Build Docker image
-        run: docker build -t portfolio-app .
+        run: docker build -t icortex-co/portfolio-app:latest .
 
-      - name: Test Docker image (optional)
+      - name: Tag Docker image
+        run: docker tag icortex-co/portfolio-app:latest icortex-co/portfolio-app:latest
+
+      - name: Push Docker image to Docker Hub
+        run: docker push icortex-co/portfolio-app:latest
+
+      - name: Test Docker image
         run: |
-          # Add testing commands if needed
-          echo "No tests for Docker image"
-
-      - name: Check if on main branch
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: echo "Deployment triggered from main branch"
+          docker run --rm icortex-co/portfolio-app:latest
+          echo "Docker image tested successfully"
 
       - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: . # Ensure this matches your build output directory
+          publish_dir: . # Update this to the current directory

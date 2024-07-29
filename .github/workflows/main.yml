@@ -4,11 +4,9 @@ on:
   push:
     branches:
       - main
-      - portfolio
   pull_request:
     branches:
       - main
-
 
 jobs:
   build-and-deploy:
@@ -29,18 +27,14 @@ jobs:
           password: ${{ secrets.DOCKER_PASS }}
 
       - name: Build Docker image
-        run: docker build -t tripfindy/portfolio-app .
-
-      - name: Tag Docker image
-        run: docker tag tripfindy/portfolio-app tripfindy/portfolio-app
+        run: docker build -t tripfindy/portfolio-app:latest .
 
       - name: Push Docker image to Docker Hub
-        run: docker push tripfindy/portfolio-app
-
+        run: docker push tripfindy/portfolio-app:latest
 
       - name: Test Docker image
         run: |
-          docker run --rm tripfindy/portfolio-app
+          docker run --rm tripfindy/portfolio-app:latest
           echo "Docker image tested successfully"
 
       - name: Deploy to GitHub Pages
@@ -48,4 +42,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: . # Update this to the directory containing your HTML files

@@ -45,11 +45,16 @@ jobs:
           docker rm portfolio-app-test
 
       - name: Deploy to GitHub Pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: . # Update this to the directory containing your HTML files
+        run: |
+            git config --global user.email "mahinhasanaiub@gmail.com"
+            git config --global user.name "mahinhasan"
+            git checkout --orphan gh-pages
+            git rm -rf .
+            cp -r . .  # Update this to the directory containing your built files
+            touch .nojekyll
+            git add .
+            git commit -m "Deploying to GitHub Pages"
+            git push -f origin gh-pages:gh-pages
 
       - name: Debug Info
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

@@ -35,6 +35,7 @@ jobs:
       - name: Push Docker image to Docker Hub
         run: docker push icortex-co/portfolio-app:latest
 
+        
       - name: Test Docker image
         run: |
           docker run --rm icortex-co/portfolio-app:latest

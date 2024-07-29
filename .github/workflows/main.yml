@@ -8,7 +8,7 @@ on:
   pull_request:
     branches:
       - main
-      
+
 
 jobs:
   build-and-deploy:
@@ -29,18 +29,18 @@ jobs:
           password: ${{ secrets.DOCKER_PASS }}
 
       - name: Build Docker image
-        run: docker build -t icortex-co/portfolio-app:latest .
+        run: docker build -t tripfindy/portfolio-app .
 
       - name: Tag Docker image
-        run: docker tag icortex-co/portfolio-app:latest icortex-co/portfolio-app:latest
+        run: docker tag tripfindy/portfolio-app tripfindy/portfolio-app
 
       - name: Push Docker image to Docker Hub
-        run: docker push icortex-co/portfolio-app:latest
+        run: docker push tripfindy/portfolio-app
 
 
       - name: Test Docker image
         run: |
-          docker run --rm icortex-co/portfolio-app:latest
+          docker run --rm tripfindy/portfolio-app
           echo "Docker image tested successfully"
 
       - name: Deploy to GitHub Pages

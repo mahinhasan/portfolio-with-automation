@@ -10,7 +10,6 @@ on:
 
 jobs:
   build-and-deploy:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
 
     steps:
@@ -34,10 +33,9 @@ jobs:
 
       - name: Test Docker image
         run: |
-          docker run -d --name portfolio-app-test -p 80:80 tripfindy/portfolio-app:latest
+          docker run -d --name portfolio-app-test -p 8080:80 tripfindy/portfolio-app:latest
           sleep 10 # Give the container some time to start
-          docker ps | grep portfolio-app-test
-          if [ $? -eq 0 ]; then
+          if docker ps --filter "name=portfolio-app-test" --filter "status=running" | grep -q portfolio-app-test; then
             echo "Docker image tested successfully"
             docker stop portfolio-app-test
           else
@@ -52,3 +50,10 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: . # Update this to the directory containing your HTML files
+
+      - name: Debug Info
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "Event name: ${{ github.event_name }}"
+          echo "Branch: ${{ github.ref }}"
+          echo "Deploying to GitHub Pages"

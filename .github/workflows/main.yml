@@ -34,8 +34,17 @@ jobs:
 
       - name: Test Docker image
         run: |
-          docker run --rm tripfindy/portfolio-app:latest
-          echo "Docker image tested successfully"
+          docker run -d --name portfolio-app-test -p 80:80 tripfindy/portfolio-app:latest
+          sleep 10 # Give the container some time to start
+          docker ps | grep portfolio-app-test
+          if [ $? -eq 0 ]; then
+            echo "Docker image tested successfully"
+            docker stop portfolio-app-test
+          else
+            echo "Docker image test failed"
+            exit 1
+          fi
+          docker rm portfolio-app-test
 
       - name: Deploy to GitHub Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
